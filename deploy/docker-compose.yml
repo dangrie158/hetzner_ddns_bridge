@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+
+  service:
+    build:
+      context: ../
+      dockerfile: ./deploy/web/Dockerfile
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ddns.entrypoints=websecure"
+      - "traefik.http.routers.ddns.rule=Host(`ddns.naehcram.de`)"
+      - "traefik.http.routers.ddns.tls.certResolver=letsencrypt"
+      - "traefik.http.routers.ddns.tls=true"
+    external_links:
+      - traefik-reverseproxy
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: traefik-reverse-proxy
+    external: true
